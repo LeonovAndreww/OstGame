@@ -8,12 +8,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
-
-import java.util.Arrays;
-import java.util.Comparator;
-
+import com.badlogic.gdx.utils.TimeUtils;
 public class ScreenGame implements Screen {
     OstGame game;
 
@@ -21,14 +17,19 @@ public class ScreenGame implements Screen {
     OrthographicCamera camera;
     Vector3 touch;
     BitmapFont font;
-    long timeShot;
-    int timeReload = 200; // индивидуально для каждого снаряда надо
+    BitmapFont fontUiR, fontUiG;
 
     Texture imgBG;
     Texture imgTankSov, imgTankGer;
 
+
     MyButton btnMenu;
     Tank[] tanks = new Tank[3];
+
+    long timeShot;
+    int timeReload = 3000; // индивидуально для каждого снаряда надо бы!
+    boolean isReloading = false;
+    String strUiReload = "Ready!";
 
     int score;
 
@@ -38,6 +39,8 @@ public class ScreenGame implements Screen {
         camera = game.camera;
         touch = game.touch;
         font = game.font;
+        fontUiR = game.fontUiR;
+        fontUiG = game.fontUiG;
 
         imgBG = new Texture("bg_game.png");
         imgTankSov = new Texture("t34e.png");
@@ -67,21 +70,33 @@ public class ScreenGame implements Screen {
                 game.setScreen(game.screenMenu);
             }
 
-            for (int i = 0; i < tanks.length; i++) {
-                if (tanks[i].hit(touch.x, touch.y)) {
-                    if (tanks[i].isEnemy()) score++;
-                    else score--;
-                    System.out.println(score);
-                    tanks[i].respawn();
-                    touch.set(-1024, -720, 0); // coordinates "reset"
+            if(!isReloading) {
+                for (int i = 0; i < tanks.length; i++) {
+                    if (tanks[i].hit(touch.x, touch.y)) {
+                        if (tanks[i].isEnemy()) score++;
+                        else score--;
+                        System.out.println(score);
+                        tanks[i].respawn();
+                        touch.set(-1024, -720, 0); // "resets" coordinates
+                    }
                 }
+                timeShot = TimeUtils.millis();
+                isReloading = true;
+            }
+            else {
+                System.out.println("Reloading!");
             }
         }
-        touch.set(-1024, -720, 0);
 
         // события
         for (int i = 0; i < tanks.length; i++) {
             tanks[i].move();
+        }
+
+        if (isReloading) {
+            if (TimeUtils.millis() - timeShot > timeReload) {
+                isReloading = false;
+            }
         }
 
         // отрисовка
@@ -98,8 +113,16 @@ public class ScreenGame implements Screen {
             }
         }
 
-        glyphLayout.setText(font, "Charged");
-        font.draw(batch, "Charged", SCR_WIDTH*12/13-glyphLayout.width/2, SCR_HEIGHT*69/70);
+        if (isReloading) {
+            strUiReload = "Reloading";
+            glyphLayout.setText(font, strUiReload);
+            fontUiR.draw(batch, strUiReload, SCR_WIDTH * 27 / 28 - glyphLayout.width / 2, SCR_HEIGHT * 69 / 70);
+        }
+        else {
+            strUiReload = "Charged";
+            glyphLayout.setText(font, strUiReload);
+            fontUiG.draw(batch, strUiReload, SCR_WIDTH * 27 / 28 - glyphLayout.width / 2, SCR_HEIGHT * 69 / 70);
+        }
         btnMenu.font.draw(batch, btnMenu.text, btnMenu.x, btnMenu.y);
         batch.end();
     }
