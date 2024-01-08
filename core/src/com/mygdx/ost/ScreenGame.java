@@ -4,12 +4,15 @@ import static com.mygdx.ost.OstGame.*;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.utils.TimeUtils;
+
 public class ScreenGame implements Screen {
     OstGame game;
 
@@ -21,13 +24,19 @@ public class ScreenGame implements Screen {
 
     Texture imgBG;
     Texture imgTankSov, imgTankGer;
-
+    Sound sndShot;
+    Sound sndEmpty;
+    Sound sndHit0;
+    Sound sndHit1;
+    Sound sndHit2;
+    Sound sndAmbWar;
 
     MyButton btnMenu;
+
     Tank[] tanks = new Tank[3];
 
     long timeShot;
-    int timeReload = 3000; // индивидуально для каждого снаряда надо бы!
+    int timeReload = 6000; // индивидуально для каждого снаряда надо бы!
     boolean isReloading = false;
     String strUiReload = "Ready!";
 
@@ -45,6 +54,12 @@ public class ScreenGame implements Screen {
         imgBG = new Texture("bg_game.png");
         imgTankSov = new Texture("t34e.png");
         imgTankGer = new Texture("pz4j.png");
+        sndShot = Gdx.audio.newSound(Gdx.files.internal("shot.mp3"));
+        sndEmpty = Gdx.audio.newSound(Gdx.files.internal("empty.mp3"));
+        sndHit0 = Gdx.audio.newSound(Gdx.files.internal("hit_0.mp3"));
+        sndHit1 = Gdx.audio.newSound(Gdx.files.internal("hit_1.mp3"));
+        sndHit2 = Gdx.audio.newSound(Gdx.files.internal("hit_2.mp3"));
+        sndAmbWar = Gdx.audio.newSound(Gdx.files.internal("warfare_ambient.mp3"));
 
         btnMenu = new MyButton("Menu", font, SCR_WIDTH*(1-19/20f), SCR_HEIGHT*69/70);
 
@@ -78,13 +93,16 @@ public class ScreenGame implements Screen {
                         System.out.println(score);
                         tanks[i].respawn();
                         touch.set(-1024, -720, 0); // "resets" coordinates
+                        Sound[] sndHits = new Sound[] {sndHit0, sndHit1, sndHit2};
+                        sndHits[MathUtils.random.nextInt(sndHits.length)].play();
                     }
                 }
                 timeShot = TimeUtils.millis();
+                sndShot.play();
                 isReloading = true;
             }
             else {
-                System.out.println("Reloading!");
+                sndEmpty.play();
             }
         }
 
@@ -97,6 +115,10 @@ public class ScreenGame implements Screen {
             if (TimeUtils.millis() - timeShot > timeReload) {
                 isReloading = false;
             }
+        }
+
+        if (MathUtils.random.nextInt(333)==1) {
+            sndAmbWar.play();
         }
 
         // отрисовка

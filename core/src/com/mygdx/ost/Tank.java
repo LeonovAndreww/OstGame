@@ -31,7 +31,7 @@ public class Tank {
     void respawn() {
         isEnemy = MathUtils.randomBoolean();
         x = SCR_WIDTH*MathUtils.random(1f, 2f);
-        y = MathUtils.random(SCR_HEIGHT*3/13, SCR_HEIGHT*6/13);
+        y = MathUtils.random(SCR_HEIGHT*3/13, SCR_HEIGHT*5.5f/13);
         vy = MathUtils.random(-0.15f, 0f);
         vx = MathUtils.random(-4f, -2f);
     }
