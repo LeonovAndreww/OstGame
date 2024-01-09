@@ -25,15 +25,38 @@ public class Tank {
         x += vx;
         y += vy;
         size = (SCR_HEIGHT-y*2)/15;
-        if (x < 0-16*size) respawn();
+        if (isEnemy) {
+            if (x < 0 - 16 * size) {
+                respawn();
+            }
+        }
+        else {
+            if(x > SCR_WIDTH + 16 * size) {
+                respawn();
+            }
+        }
     }
 
     void respawn() {
-        isEnemy = MathUtils.randomBoolean();
-        x = SCR_WIDTH*MathUtils.random(1f, 2f);
-        y = MathUtils.random(SCR_HEIGHT*3/13, SCR_HEIGHT*5.5f/13);
-        vy = MathUtils.random(-0.15f, 0f);
-        vx = MathUtils.random(-4f, -2f);
+//        isEnemy = MathUtils.randomBoolean();
+        if (MathUtils.random(3)==1) {
+            isEnemy = false;
+        }
+        else {
+            isEnemy = true;
+        }
+        if (isEnemy) {
+            x = SCR_WIDTH * MathUtils.random(1f, 2f);
+            y = MathUtils.random(SCR_HEIGHT * 3 / 13, SCR_HEIGHT * 5.5f / 13);
+            vy = MathUtils.random(-0.15f, 0f);
+            vx = MathUtils.random(-4f, -2f);
+        }
+        else {
+            x = 0 - MathUtils.random(1f, 2f);
+            y = MathUtils.random(SCR_HEIGHT * 3 / 13, SCR_HEIGHT * 5.5f / 13);
+            vy = MathUtils.random(-0.15f, 0f);
+            vx = MathUtils.random(2f, 4f);
+        }
     }
 
     boolean hit(float touchX, float touchY) {

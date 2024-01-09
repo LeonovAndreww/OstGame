@@ -85,7 +85,7 @@ public class ScreenGame implements Screen {
                 game.setScreen(game.screenMenu);
             }
 
-            if(!isReloading) {
+            else if(!isReloading) {
                 for (int i = 0; i < tanks.length; i++) {
                     if (tanks[i].hit(touch.x, touch.y)) {
                         if (tanks[i].isEnemy()) score++;
@@ -131,7 +131,7 @@ public class ScreenGame implements Screen {
                 batch.draw(imgTankGer, tanks[i].getX(), tanks[i].getY(), 16*tanks[i].getSize(), 9*tanks[i].getSize());
             }
             else {
-                batch.draw(imgTankSov, tanks[i].getX(), tanks[i].getY(), 16*tanks[i].getSize(), 9*tanks[i].getSize());
+                batch.draw(imgTankSov, tanks[i].getX(), tanks[i].getY(), -16*tanks[i].getSize(), 9*tanks[i].getSize());
             }
         }
 
