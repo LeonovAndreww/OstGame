@@ -39,7 +39,10 @@ public class MyButton {
     }
 
     boolean hit(float touchX, float touchY){
-        if (isTextButton) return x<touchX & touchX<x+width & y>touchY & touchY>y-height;
-        return (x<touchX & touchX<x+width) & (y<touchY & touchY<y+height);
+        if (isTextButton) {
+            return (x < touchX && touchX < x + width && y > touchY && touchY > y - height);
+        } else {
+            return (x < touchX && touchX < x + width) && (y < touchY && touchY < y + height);
+        }
     }
 }

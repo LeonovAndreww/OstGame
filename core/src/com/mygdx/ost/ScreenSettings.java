@@ -25,6 +25,8 @@ public class ScreenSettings implements Screen {
     MyButton btnSound;
     MyButton btnBack;
 
+    String strSnd = "Sound is on";
+
     public ScreenSettings(OstGame game){
         this.game = game;
         batch = game.batch;
@@ -32,12 +34,11 @@ public class ScreenSettings implements Screen {
         touch = game.touch;
         font = game.font;
 
-        GlyphLayout glyphLayout = new GlyphLayout();
         imgBG = new Texture("bg_settings.png");
         img = new Texture("badlogic.jpg");
 
         btnBack = new MyButton("Back to menu", font,SCR_WIDTH/2, SCR_HEIGHT*2/10);
-        btnSound = new MyButton("Sound", font, SCR_WIDTH/2, SCR_HEIGHT*3/10);
+        btnSound = new MyButton(strSnd, font, SCR_WIDTH/2, SCR_HEIGHT*3/10);
     }
 
     @Override
@@ -55,7 +56,9 @@ public class ScreenSettings implements Screen {
                 game.setScreen(game.screenMenu);
             }
             if (btnSound.hit(touch.x, touch.y)) {
-                System.out.println("sound touched");
+                game.isSoundOn = !game.isSoundOn;
+                if (game.isSoundOn) strSnd = "Sound is on";
+                else strSnd = "Sound is off";
             }
         }
         // события
@@ -69,7 +72,7 @@ public class ScreenSettings implements Screen {
         font.draw(batch, "S E T T I N G S", SCR_WIDTH/2-glyphLayout.width/2, SCR_HEIGHT*9/10);
         batch.draw(img, 1000, 0);
         btnBack.font.draw(batch, btnBack.text, btnBack.x, btnBack.y);
-        btnSound.font.draw(batch, btnSound.text, btnSound.x, btnSound.y);
+        btnSound.font.draw(batch, strSnd, btnSound.x, btnSound.y);
         batch.end();
     }
 

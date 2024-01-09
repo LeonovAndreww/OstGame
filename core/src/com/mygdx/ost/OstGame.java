@@ -14,11 +14,14 @@ public class OstGame extends Game {
 
 	public static final float SCR_WIDTH = 1920, SCR_HEIGHT = 1080;
 
+	public int score = 0; //
+	public boolean isSoundOn = true;
+
 	SpriteBatch batch;
 	OrthographicCamera camera;
 	Vector3 touch;
 	BitmapFont font;
-	BitmapFont fontUiR, fontUiG;
+	BitmapFont fontUi, fontUiR, fontUiG;
 
 	public static GlyphLayout glyphLayout;
 
@@ -57,10 +60,13 @@ public class OstGame extends Game {
 		font = generator.generateFont(parameter);
 		parameter.size = 50;
 		parameter.borderWidth = 2;
+		fontUi = generator.generateFont(parameter);
 		parameter.color = Color.GREEN;
 		fontUiG = generator.generateFont(parameter);
 		parameter.color = Color.RED;
 		fontUiR = generator.generateFont(parameter);
 		generator.dispose();
 	}
+
+
 }

@@ -9,6 +9,7 @@ public class Tank {
     private float x, y;
     private float vx, vy;
     private float size;
+    private int hp;
 
     public boolean isEnemy() {
         return isEnemy;
@@ -39,6 +40,7 @@ public class Tank {
 
     void respawn() {
 //        isEnemy = MathUtils.randomBoolean();
+        hp = 2;
         if (MathUtils.random(3)==1) {
             isEnemy = false;
         }
@@ -59,8 +61,20 @@ public class Tank {
         }
     }
 
-    boolean hit(float touchX, float touchY) {
-        return ((x<touchX & touchX<x+16*size)&(y<touchY & touchY<y+9*size));
+    boolean hit(float touchX, float touchY, int damage) {
+        if (isEnemy) {
+            if ((x<touchX & touchX<x+16*size)&(y<touchY & touchY<y+9*size)) {
+                hp-=damage;
+                return true;
+            }
+        }
+        else {
+            if ((x>touchX & touchX>x-16*size)&(y<touchY & touchY<y+9*size)) {
+                hp-=damage;
+                return true;
+            }
+        }
+        return false;
     }
 
     public float getX() {
@@ -73,5 +87,9 @@ public class Tank {
 
     public float getSize() {
         return size;
+    }
+
+    public int getHp() {
+        return hp;
     }
 }

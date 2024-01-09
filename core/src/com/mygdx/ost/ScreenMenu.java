@@ -3,6 +3,7 @@ package com.mygdx.ost;
 import static com.mygdx.ost.OstGame.*;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -17,14 +18,17 @@ public class ScreenMenu implements Screen {
     SpriteBatch batch;
     OrthographicCamera camera;
     Vector3 touch;
-    BitmapFont font;
+    BitmapFont font, fontUi;
 
     Texture imgBG;
-    Texture img;
 
     MyButton btnPlay;
+    MyButton btnSave;
+    MyButton btnLoad;
     MyButton btnExit;
     MyButton btnSettings;
+
+    String preferenceStatus = "Welcome";
 
     public ScreenMenu(OstGame game){
         this.game = game;
@@ -32,15 +36,18 @@ public class ScreenMenu implements Screen {
         camera = game.camera;
         touch = game.touch;
         font = game.font;
+        fontUi = game.fontUi;
 
         glyphLayout = new GlyphLayout();
 
         imgBG = new Texture("bg_menu.png");
-        img = new Texture("badlogic.jpg");
 
         btnPlay = new MyButton("Play", font,SCR_WIDTH/2, SCR_HEIGHT*7/10);
-        btnSettings = new MyButton("Settings", font,SCR_WIDTH/2, SCR_HEIGHT*6/10);
-        btnExit = new MyButton("Exit", font,SCR_WIDTH/2, SCR_HEIGHT*5/10);
+        btnSave = new MyButton("Save", font,SCR_WIDTH/2, SCR_HEIGHT*6/10);
+        btnLoad = new MyButton("Load", font,SCR_WIDTH/2, SCR_HEIGHT*5/10);
+        btnSettings = new MyButton("Settings", font,SCR_WIDTH/2, SCR_HEIGHT*4/10);
+        btnExit = new MyButton("Exit", font,SCR_WIDTH/2, SCR_HEIGHT*3/10);
+
     }
 
     @Override
@@ -63,20 +70,30 @@ public class ScreenMenu implements Screen {
             if (btnSettings.hit(touch.x, touch.y)) {
                 game.setScreen(game.screenSettings);
             }
+            if (btnSave.hit(touch.x, touch.y)) {
+                savePlayer();
+                preferenceStatus = "Saved";
+            }
+            if (btnLoad.hit(touch.x, touch.y)) {
+                loadPlayer();
+                preferenceStatus = "Loaded";
+            }
         }
         // события
-
 
         // отрисовка
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         batch.draw(imgBG, 0, 0, SCR_WIDTH, SCR_HEIGHT);
+
         glyphLayout.setText(font, "M E N U");
         font.draw(batch, "M E N U", SCR_WIDTH/2-glyphLayout.width/2, SCR_HEIGHT*9/10);
-        batch.draw(img, 1000, 0);
         btnPlay.font.draw(batch, btnPlay.text, btnPlay.x, btnPlay.y);
+        btnSave.font.draw(batch, btnSave.text, btnSave.x, btnSave.y);
+        btnLoad.font.draw(batch, btnLoad.text, btnLoad.x, btnLoad.y);
         btnSettings.font.draw(batch, btnSettings.text, btnSettings.x, btnSettings.y);
         btnExit.font.draw(batch, btnExit.text, btnExit.x, btnExit.y);
+        fontUi.draw(batch, preferenceStatus, 0 + SCR_WIDTH / 27 / 28, SCR_HEIGHT * 69 / 70);
         batch.end();
     }
 
@@ -102,7 +119,17 @@ public class ScreenMenu implements Screen {
 
     @Override
     public void dispose() {
-        img.dispose();
         imgBG.dispose();
+    }
+
+    private void savePlayer() {
+        Preferences preferences = Gdx.app.getPreferences("playerOst");
+        preferences.putInteger("Score", game.score);
+        preferences.flush();
+    }
+
+    private void loadPlayer() {
+        Preferences preferences = Gdx.app.getPreferences("playerOst");
+        game.score = preferences.getInteger("Score");
     }
 }
