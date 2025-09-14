@@ -8,7 +8,6 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
@@ -40,10 +39,10 @@ public class ScreenGame implements Screen {
     Tank[] tanks = new Tank[3];
 
     long timeShot;
-    int timeReload = 6000; // индивидуально для каждого снаряда надо бы!
+    int timeReload = HE_RELOAD;
     boolean isReloading = false;
     String strUiReload = "Ready!";
-    int shellDamage = 1;
+    int shellDamage = HE_DAMAGE;
 
     public ScreenGame(OstGame game){
         this.game = game;
@@ -95,25 +94,26 @@ public class ScreenGame implements Screen {
                 game.setScreen(game.screenMenu);
             }
             else if (btnHe.hit(touch.x, touch.y)) {
-                shellDamage = 1;
+                shellDamage = HE_DAMAGE;
+                timeReload = HE_RELOAD;
                 System.out.println("he clicked");
             }
             else if (btnAphe.hit(touch.x, touch.y) && game.score >= 20) {
-                shellDamage = 2;
+                shellDamage = APHE_DAMAGE;
+                timeReload = APHE_RELOAD;
                 System.out.println("aphe clicked");
             }
 
             else if(!isReloading) {
-                for (int i = 0; i < tanks.length; i++) {
-                    if (tanks[i].hit(touch.x, touch.y, shellDamage)) {
-                        if (tanks[i].getHp()==0) {
-                            if (tanks[i].isEnemy()) game.score+=5;
-                            else game.score-=10;
-                            tanks[i].respawn();
+                for (Tank tank : tanks) {
+                    if (tank.hit(touch.x, touch.y, shellDamage)) {
+                        if (tank.getHp() == 0) {
+                            if (tank.isEnemy()) game.score += 5;
+                            else game.score -= 10;
+                            tank.respawn();
                             touch.set(-1024, -720, 0); // "resets" coordinates
-                        }
-                        else {
-                            if (tanks[i].isEnemy()) game.score++;
+                        } else {
+                            if (tank.isEnemy()) game.score++;
                             else game.score--;
                         }
                         if (game.isSoundOn) {
@@ -132,8 +132,8 @@ public class ScreenGame implements Screen {
         }
 
         // события
-        for (int i = 0; i < tanks.length; i++) {
-            tanks[i].move();
+        for (Tank tank : tanks) {
+            tank.move();
         }
 
         if (isReloading) {
@@ -151,12 +151,11 @@ public class ScreenGame implements Screen {
         batch.begin();
         batch.draw(imgBG, 0, 0, SCR_WIDTH, SCR_HEIGHT);
 
-        for (int i = 0; i < tanks.length; i++) {
-            if(tanks[i].isEnemy()) {
-                batch.draw(imgTankGer, tanks[i].getX(), tanks[i].getY(), 16*tanks[i].getSize(), 9*tanks[i].getSize());
-            }
-            else {
-                batch.draw(imgTankSov, tanks[i].getX(), tanks[i].getY(), -16*tanks[i].getSize(), 9*tanks[i].getSize());
+        for (Tank tank : tanks) {
+            if (tank.isEnemy()) {
+                batch.draw(imgTankGer, tank.getX(), tank.getY(), 16 * tank.getSize(), 9 * tank.getSize());
+            } else {
+                batch.draw(imgTankSov, tank.getX(), tank.getY(), -16 * tank.getSize(), 9 * tank.getSize());
             }
         }
 
@@ -218,11 +217,11 @@ public class ScreenGame implements Screen {
         imgBtnAphe.dispose();
         imgBtnApheDis.dispose();
         imgBtnApheLock.dispose();
-    }
-
-    float textWidth(String text, BitmapFont font){
-        GlyphLayout layout = new GlyphLayout();
-        layout.setText(font, text);
-        return layout.width;
+        sndShot.dispose();
+        sndEmpty.dispose();
+        sndHit0.dispose();
+        sndHit1.dispose();
+        sndHit2.dispose();
+        sndAmbWar.dispose();
     }
 }

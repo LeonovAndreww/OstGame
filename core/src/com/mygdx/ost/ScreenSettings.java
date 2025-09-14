@@ -7,7 +7,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 
@@ -20,7 +19,6 @@ public class ScreenSettings implements Screen {
     BitmapFont font;
 
     Texture imgBG;
-    Texture img;
 
     MyButton btnSound;
     MyButton btnBack;
@@ -35,7 +33,6 @@ public class ScreenSettings implements Screen {
         font = game.font;
 
         imgBG = new Texture("bg_settings.png");
-        img = new Texture("badlogic.jpg");
 
         btnBack = new MyButton("Back to menu", font,SCR_WIDTH/2, SCR_HEIGHT*2/10);
         btnSound = new MyButton(strSnd, font, SCR_WIDTH/2, SCR_HEIGHT*3/10);
@@ -63,14 +60,12 @@ public class ScreenSettings implements Screen {
         }
         // события
 
-
         // отрисовка
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
         batch.draw(imgBG, 0, 0, SCR_WIDTH, SCR_HEIGHT);
         glyphLayout.setText(font, "S E T T I N G S");
         font.draw(batch, "S E T T I N G S", SCR_WIDTH/2-glyphLayout.width/2, SCR_HEIGHT*9/10);
-        batch.draw(img, 1000, 0);
         btnBack.font.draw(batch, btnBack.text, btnBack.x, btnBack.y);
         btnSound.font.draw(batch, strSnd, btnSound.x, btnSound.y);
         batch.end();
@@ -98,7 +93,6 @@ public class ScreenSettings implements Screen {
 
     @Override
     public void dispose() {
-        img.dispose();
         imgBG.dispose();
     }
 }

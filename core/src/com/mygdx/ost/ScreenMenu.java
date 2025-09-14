@@ -47,7 +47,6 @@ public class ScreenMenu implements Screen {
         btnLoad = new MyButton("Load", font,SCR_WIDTH/2, SCR_HEIGHT*5/10);
         btnSettings = new MyButton("Settings", font,SCR_WIDTH/2, SCR_HEIGHT*4/10);
         btnExit = new MyButton("Exit", font,SCR_WIDTH/2, SCR_HEIGHT*3/10);
-
     }
 
     @Override

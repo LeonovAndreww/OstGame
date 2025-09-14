@@ -14,7 +14,10 @@ public class OstGame extends Game {
 
 	public static final float SCR_WIDTH = 1920, SCR_HEIGHT = 1080;
 
-	public int score = 0; //
+	public static final int HE_RELOAD = 5500, APHE_RELOAD = 4000;
+	public static final int HE_DAMAGE = 1, APHE_DAMAGE = 2;
+
+	public int score = 0;
 	public boolean isSoundOn = true;
 
 	SpriteBatch batch;
@@ -24,7 +27,6 @@ public class OstGame extends Game {
 	BitmapFont fontUi, fontUiR, fontUiG;
 
 	public static GlyphLayout glyphLayout;
-
 
 	ScreenMenu screenMenu;
 	ScreenGame screenGame;
@@ -55,18 +57,27 @@ public class OstGame extends Game {
 	private void fontGenerate() {
 		FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("amarugt.ttf"));
 		FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+
 		parameter.size = 70;
 		parameter.borderWidth = 3;
 		font = generator.generateFont(parameter);
+
 		parameter.size = 50;
 		parameter.borderWidth = 2;
 		fontUi = generator.generateFont(parameter);
+
 		parameter.color = Color.GREEN;
 		fontUiG = generator.generateFont(parameter);
+
 		parameter.color = Color.RED;
 		fontUiR = generator.generateFont(parameter);
+
 		generator.dispose();
 	}
 
-
+	public static float textWidth(String text, BitmapFont font){
+		GlyphLayout layout = new GlyphLayout();
+		layout.setText(font, text);
+		return layout.width;
+	}
 }

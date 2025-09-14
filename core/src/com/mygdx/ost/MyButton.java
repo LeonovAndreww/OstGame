@@ -9,7 +9,7 @@ public class MyButton {
     float width, height;
     BitmapFont font;
     String text;
-    private boolean isTextButton;
+    private final boolean isTextButton;
 
     public MyButton(float x, float y, float size){
         this.x = x;
@@ -18,13 +18,13 @@ public class MyButton {
         isTextButton = false;
     }
 
-    public MyButton(float x, float y, float width, float height){
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
-        isTextButton = true;
-    }
+//    public MyButton(float x, float y, float width, float height){
+//        this.x = x;
+//        this.y = y;
+//        this.width = width;
+//        this.height = height;
+//        isTextButton = true;
+//    }
 
     public MyButton(String text, BitmapFont font,float x, float y){
         this.x = x;

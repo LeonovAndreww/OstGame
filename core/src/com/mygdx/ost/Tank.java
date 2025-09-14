@@ -1,3 +1,4 @@
+
 package com.mygdx.ost;
 
 import static com.mygdx.ost.OstGame.SCR_HEIGHT;
@@ -10,11 +11,6 @@ public class Tank {
     private float vx, vy;
     private float size;
     private int hp;
-
-    public boolean isEnemy() {
-        return isEnemy;
-    }
-
     private boolean isEnemy;
 
 
@@ -39,14 +35,8 @@ public class Tank {
     }
 
     void respawn() {
-//        isEnemy = MathUtils.randomBoolean();
         hp = 2;
-        if (MathUtils.random(3)==1) {
-            isEnemy = false;
-        }
-        else {
-            isEnemy = true;
-        }
+        isEnemy = MathUtils.random(3) != 1;
         if (isEnemy) {
             x = SCR_WIDTH * MathUtils.random(1f, 2f);
             y = MathUtils.random(SCR_HEIGHT * 3 / 13, SCR_HEIGHT * 5.5f / 13);
@@ -91,5 +81,8 @@ public class Tank {
 
     public int getHp() {
         return hp;
+    }
+    public boolean isEnemy() {
+        return isEnemy;
     }
 }
